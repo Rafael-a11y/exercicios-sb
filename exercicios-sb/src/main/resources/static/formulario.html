@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>Formulário</title>
+		</head>
+		<body>
+			<h1>Formulário</h1>
+				<!--O atributo method serve para definir o método http que será executado quando o botão ser pressionado 
+				pelo usuário, já o atributo action serve para definir qual a url que será usada para achar o método 
+				mapeado na classe MetodosHttpController, já que esta classe foi definida como 
+				@RequestMapping(path = "/metodos") e cada método Java foi devidamente mapeado para as requisições http
+				necessárias. Resumindo, o botão 'enviar' vai executar o método http post que está meapeado no método
+				java de mesmo nome (public String post()) e que está devidamente mapeado como @PostMapping na classe 
+				java MetodosHttpController.
+				Como o formulário suporta apenas requisições get e post, iremos usar o postman para testar as outras
+				requisições http.-->
+			<form method="get" action="/metodos">
+				<button>Enviar</button>
+			</form>
+		</body>
+	</html>
+	
