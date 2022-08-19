@@ -19,7 +19,9 @@ public class CalculadoraController
 	
 	/*/calculadora/subtrair?a=num&b=num**/
 	@GetMapping("/subtrair")
-	public int subtrair(@RequestParam(name = "a") int a, @RequestParam(name = "b") int b)
+	public int subtrair
+		(@RequestParam(name = "a") int a,
+		@RequestParam(name = "b") int b)
 	{
 		return a - b;
 	}
