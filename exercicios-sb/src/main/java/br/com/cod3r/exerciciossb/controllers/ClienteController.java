@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.cod3r.exerciciossb.models.Cliente;
+import br.com.cod3r.exerciciossb.model.entities.Cliente;
 /*A anotação @RestController serve para dizer ao Spring que esta é uma classe controladora que irá conter os métodos mapeados para url's*/
 @RestController
 @RequestMapping("/clientes")
