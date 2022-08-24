@@ -31,6 +31,18 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
+		<!--Esta dependência é para poder usar as bibliotecas dentro de javax.validation, fornecida pelo
+		java. -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
+		<!--Esta dependência também é para poder usar as bibliotecas dentro de javax.validation.
+		Só que diferentemente da anterior, esta é fornecida pelo SpringFramework e não pelo próprio java 
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency> -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
