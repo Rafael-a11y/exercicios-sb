@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,5 +56,17 @@ import br.com.cod3r.exerciciossb.model.repositories.ProdutoRepository;
 	public Optional<Produto> obterProdutoPorId(@PathVariable int id)
 	{
 		return produtoRepository.findById(id);
+	}
+	
+	/*A requisição https put tem a função de alterar, no caso do CrudRepository<T, K> void save(S entity), este método também
+	 * serve para requisições de tipo put, mas para diferenciar o método de uma requisição https post, usa-se a anotação
+	 * @PutMapping ao invés de @PostMapping. Uma requisição http put serve para o tipo de situação em que deseja-se alterar
+	 * por completo o objetos*/
+	
+	@PutMapping
+	public Produto alterarProduto(@Valid Produto produto)
+	{
+		produtoRepository.save(produto);
+		return produto;
 	}
 }
