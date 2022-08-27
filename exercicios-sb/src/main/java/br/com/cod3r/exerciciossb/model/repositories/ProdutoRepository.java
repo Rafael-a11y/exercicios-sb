@@ -1,6 +1,8 @@
 package br.com.cod3r.exerciciossb.model.repositories;
 
-import org.springframework.data.repository.PagingAndSortingRepository;	
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
 import br.com.cod3r.exerciciossb.model.entities.Produto;
 /*Esta interface será responsável por gerenciar a Entidade Produto, a interface extende CrudRepository que usa generics para definir o tipo de Entidade que 
@@ -11,5 +13,19 @@ import br.com.cod3r.exerciciossb.model.entities.Produto;
  * efeito colateral nas outras clases (implementadoras) nem na interface ProdutoRepository<Produto, Integer> que agora extende PagingAndSortingRepository<T, ID>*/
 public interface ProdutoRepository  extends  PagingAndSortingRepository<Produto, Integer>
 {
+	public Iterable<Produto> findByNomeContainingIgnoreCase(String parteNome);
 	
+//	findByNomeContaining
+//	findByNomeIsContaining -> Serve para encontrar registros a partir de uma string fornecida pelo usuário que bate parcialmente ou não com a string do atributo(no caso, nome)
+//	findByNomeContains
+//	
+//	findByNomeStartsWith -> Serve para encontrar registros a partir de uma string fornecida pelo usuário que bate com as iniciais da string do atributo(no caso, nome)
+//	findByNomeEndsWith
+//	
+//	findByNomeNotContaining -> Serve para encontrar registros a partir de uma string fornecida pelo usuário que não bate com a string do atributo(no caso, nome)
+	
+	/*Consulta JPQL que se associa ao método searchByNameLike. O método searchByNameLike possui um parâmetro String nome que está marcado com @Param("nome"), a anotação @Param
+	 * serve para declarar que o parâmetro String nome vai ser usado como parâmetro da consulta jpql.*/
+	@Query("SELECT p FROM Produto p WHERE p.nome like %:nome%") // O parâmetro da consulta jpql deve ter o mesmo nome do parâmetro de @Param.
+	public Iterable<Produto> searchByNameLike(@Param("nome") String nome);
 }

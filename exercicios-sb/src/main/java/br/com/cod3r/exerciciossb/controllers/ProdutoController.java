@@ -53,11 +53,17 @@ import br.com.cod3r.exerciciossb.model.repositories.ProdutoRepository;
 		return produtoRepository.findAll();
 	}
 	
-	@GetMapping(path = "/pagina/{numeroPagina}")
-	public Iterable<Produto> obterProdutosPorPagina(@PathVariable int numeroPagina)
+	/*Fazendo uma consulta por página, o objeto Pageable page é construído a partir do método PageRequest.of(numeroPagina, qtdePagina), onde o primeiro parâmetro representa o 
+	 * número da página, já o segundo representa o total de elementos da página. Para este método ser acessado, é necessário que a url seja pelo caminho http://localhost:8080/api/produtos/
+	 * pagina/numeroPagina/qtdePagina. O método também limita o atributo qtdePagina, que representa a quantidade de elementos por página, isso acontece porque há o risco de 
+	 * o usuário requisitar um número muito alto de elementos por página, sendo assim, o valor máximo que esta variável pode portar é 5, ou seja, no máximo 5 elementos por
+	 * página */
+	@GetMapping(path = "/pagina/{numeroPagina}/{qtdePagina}") // O parâmetro da url deve ter o mesmo nome do parâmetro do método
+	public Iterable<Produto> obterProdutosPorPagina(@PathVariable int numeroPagina, @PathVariable int qtdePagina)
 	{
-		Pageable pageable = PageRequest.of(0, 3);
-		return produtoRepository.findAll(pageable);
+		if(qtdePagina > 5) qtdePagina = 5;
+		Pageable page = PageRequest.of(numeroPagina, qtdePagina);
+		return produtoRepository.findAll(page);
 	}
 	
 	/*http://localhost:8080/api/produtos/número inteiro. Esse método é ativado por uma requisição get, porém com um / seguido
@@ -65,15 +71,30 @@ import br.com.cod3r.exerciciossb.model.repositories.ProdutoRepository;
 	 * nenhum registro da tabela dentro do banco de dados, o JSON retornado será vazio, mas a aplicação não irá quebrar, pois
 	 * o objeto Optional<T> serve justamente para este tipo de situação, para evitar NullPointerException. Lembrando que
 	 * ao especificar o path do método http get, é preciso usar a anotação @PathVariable sobre o parâmetro passado.*/
-	@GetMapping(path = "/{id}")
+	@GetMapping(path = "/{id}") // O parâmetro da url deve ter o mesmo nome do parâmetro do método
 	public Optional<Produto> obterProdutoPorId(@PathVariable int id)
-	{
+	{	
 		return produtoRepository.findById(id);
+	}
+	
+	/*Aqui nós temos mais um maravilhoso exemplo de injeção de dependência que o Spring nos oferece. Acontece que ao ser declarado na interface ProdutoRepository<Produto, 
+	 * Integer>, o método public Iterable<Produto> findByNomeContainingIgnoreCase(String parteNome); o Spring automaticamente fornece uma implementação do método (repare 
+	 * dentro do método, o return produtoRepository.findByNomeContainingIgnoreCase(parteNome)). Isso acontece porque existe uma convenção de injeção de dependêcias para 
+	 * métodos, para que a injeção funcione, é preciso que o nome do método siga uma convenção, se você tentar usar um nome que não existe na convenção, o Spring não con
+	 * segue fornecer uma implementação, exemplo: findByNomeContainingIgnoreCaso já não funciona, pois a convenção de nomes para métodos de interface é em inglês, no caso
+	 * do método  findByNomeContainingIgnoreCase, o atributo nome (que está em portugês, ao invés de name, em inglês) não atrapalha na implementação pois nome é o nome
+	 * do atributo, como o desenvolvedor pode dar qualquer nome para qualquer atributo, o nome do atributo e muito menos o seu idioma não interfere na nomenclatura. 
+	 * Obviamente, esse nome (findByNomeIgnoreCase) não funciona se o parâmetro for um inteiro ao invés de uma String, já que  a nomenclatura findBy****IgnoreCase serve para
+	 * Strings, sendo assim, o atributo referenciado deve ser uma string*/
+	@RequestMapping(path = "/nome/{parteNome}") // O parâmetro da url deve ter o mesmo nome do parâmetro do método
+	public Iterable<Produto> obterProdutoPorNome(@PathVariable String parteNome)
+	{
+		return produtoRepository.searchByNameLike(parteNome);
 	}
 	
 	/*Este método exclui um produto no banco de dados a partir de um @Path Variable int id. Lembrando que é necessário usar @DeleteMapping(path = "/{id}") para especificar 
 	 * que a exclusão se dará por um id de parâmetro na url, e também para diferenciar a url do outro método mais abaixo também mapeado com @DeleteMapping*/
-	@DeleteMapping(path = "/{id}")
+	@DeleteMapping(path = "/{id}") // O parâmetro da url deve ter o mesmo nome do parâmetro do método
 	public void excluirProdutoPorId(@PathVariable int id)
 	{
 		produtoRepository.deleteById(id);
